@@ -1,0 +1,2 @@
+# rachmaninoff-bot
+Discord bot
