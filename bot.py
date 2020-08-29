@@ -1,23 +1,15 @@
 # bot.py
 import os
-
-import discord
+from discord.ext import commands
 from dotenv import load_dotenv
-
+from rachmaninoff_cog import RachmaninoffGeneralCog, RachmaninoffTrafficCog
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+GUILD = os.getenv('DISCORD_GUILD')
 
-client = discord.Client()
+bot = commands.Bot(command_prefix='!')
 
-@client.event
-async def on_ready():
-    for guild in client.guilds:
-        print(guild)
+bot.add_cog(RachmaninoffGeneralCog(bot))
+bot.add_cog(RachmaninoffTrafficCog(bot))
 
-    # members = '\n - '.join([member.name for member in guild.members])
-
-
-
-    
-
-client.run(TOKEN)
+bot.run(TOKEN)
