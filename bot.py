@@ -1,23 +1,21 @@
 # bot.py
 import os
-
-import discord
+from discord.ext import commands
 from dotenv import load_dotenv
-
+from rachmaninoff_cog import RachmaninoffGeneralCog, RachmaninoffTrafficCog
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+GUILD = os.getenv('DISCORD_GUILD')
+MONGODB_CONNECTION = os.getenv('MONGODB_CONNECTION')
+ALLOWED_USERS = os.getenv('ALLOWED_USERS')
 
-client = discord.Client()
+bot = commands.Bot(command_prefix='!')
 
-@client.event
-async def on_ready():
-    for guild in client.guilds:
-        print(guild)
+# bot.add_cog(RachmaninoffGeneralCog(bot))
+bot.add_cog(RachmaninoffTrafficCog(bot=bot, 
+                                    mongodb_connection=MONGODB_CONNECTION, 
+                                    allowed_users=ALLOWED_USERS))
 
-    # members = '\n - '.join([member.name for member in guild.members])
+bot.add_cog(RachmaninoffGeneralCog(bot=bot, allowed_users=ALLOWED_USERS))
 
-
-
-    
-
-client.run(TOKEN)
+bot.run(TOKEN)
