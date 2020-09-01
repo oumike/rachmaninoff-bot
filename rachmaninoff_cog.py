@@ -4,7 +4,7 @@ from pymongo import MongoClient
 from datetime import datetime # Current date time in local system print(datetime.now())
 
 class RachmaninoffInterface(commands.Cog):
-    def __init__(self, bot, allowed_users, mongodb_connection):
+    def __init__(self, bot, allowed_users, mongodb_connection=""):
         super().__init__()
         self.bot = bot
         self.allowed_users = allowed_users
@@ -13,59 +13,65 @@ class RachmaninoffInterface(commands.Cog):
     def is_allowed(self, username):
         return username in self.allowed_users
 
-class RachmaninoffGeneralCog(commands.Cog):
+    def log_action(self, message):
+        pprint("RB LOG --- " + message)
+        # TODO: Add code to log to file if debug is flagged or something
+
+class RachmaninoffGeneralCog(RachmaninoffInterface):
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.name == 'Rachmaninoffs Bot':
             return
 
-        print(message.author.name + ':' + message.content)
+        self.log_action(message.author.name + ': ' + message.content)
 
     @commands.command()
     async def test(self, ctx):
         await ctx.send('yes')
 
 class RachmaninoffTrafficCog(RachmaninoffInterface):
+
+    def get_logs_collection(self):
+        client = MongoClient(self.mongodb_connection)
+        return client.trafficlogs.logs
+
     @commands.command()
-    async def log(self, ctx, name: str, day: str):
+    async def log(self, ctx, name: str, day: str, date: str):
         if not self.is_allowed(ctx.author.name):
             return
 
-        client = MongoClient(self.mongodb_connection)
-        db = client.trafficlogs
+        logs_collection = self.get_logs_collection()
 
         log_json = {
             'name': name,
             'day': day,
-            'datetime': datetime.now()
-
+            'date': datetime.strptime(date, '%m/%d/%y'),
+            'created_at': datetime.now()
         }
 
-        db.logs.insert_one(log_json)
+        logs_collection.insert_one(log_json)
 
-        await ctx.send('Log created!')
-        print("Log created!")
-        
+        await ctx.send('Log created.')
+        self.log_action('Log created.')
+
     @commands.command()
     async def getlogs(self, ctx):
         if not self.is_allowed(ctx.author.name):
             return
 
-        client = MongoClient(self.mongodb_connection)
-        db = client.trafficlogs
+        logs_collection = self.get_logs_collection()
 
-        for log in db.logs.find():
-            await ctx.send('name: ' + log['name'] + ', day: ' + log['day'])
+        for log in logs_collection.find():
+            date = log['date']
+            await ctx.send('name: ' + log['name'] + ', day: ' + log['day'] + ', date: ' + date.__format__('%m/%d/%Y'))
         
     @commands.command()
     async def deletelogs(self, ctx):
-        if not self.is_allowed(ct.author.name):
+        if not self.is_allowed(ctx.author.name):
             return
 
-        client = MongoClient(self.mongodb_connection)
-        db = client.trafficlogs
+        self.get_logs_collection().delete_many({})
 
-        for log in db.logs.find():
-            log.delete()
-        
+        await ctx.send('Deleted all logs.')
+        self.log_action('Deleted all logs.')
         

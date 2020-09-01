@@ -16,4 +16,6 @@ bot.add_cog(RachmaninoffTrafficCog(bot=bot,
                                     mongodb_connection=MONGODB_CONNECTION, 
                                     allowed_users=ALLOWED_USERS))
 
+bot.add_cog(RachmaninoffGeneralCog(bot=bot, allowed_users=ALLOWED_USERS))
+
 bot.run(TOKEN)
