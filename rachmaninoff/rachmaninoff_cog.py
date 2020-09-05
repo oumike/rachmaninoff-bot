@@ -2,6 +2,7 @@ from discord.ext import commands
 from pprint import pprint
 from pymongo import MongoClient
 from datetime import datetime # Current date time in local system print(datetime.now())
+import speedtest
 
 class RachmaninoffInterface(commands.Cog):
     def __init__(self, bot, allowed_users, mongodb_connection=""):
@@ -24,6 +25,30 @@ class RachmaninoffGeneralCog(RachmaninoffInterface):
             return
 
         self.log_action(message.author.name + ': ' + message.content)
+
+    @commands.command()
+    async def speedtest(self, ctx):
+        if not self.is_allowed(ctx.author.name):
+            return
+
+        pprint('Running speedtest...')
+        s = speedtest.Speedtest()
+        s.get_servers(servers=[])
+        s.get_best_server()
+        s.download(threads=None)
+        s.upload(threads=None)
+        s.results.share()
+        
+        speedtest_results = s.results.dict()
+        download_in_mb = speedtest_results['download']/(1000*1000)
+        upload_in_mb = speedtest_results['upload']/(1000*1000)
+
+        print('finished running speedtest.')
+
+        await ctx.send('Download (megabits): ' + str(round(download_in_mb, 2)))
+        await ctx.send('Upload (megabits): ' + str(round(upload_in_mb, 2)))
+        await ctx.send('Share URL: ' + str(speedtest_results['share']))
+
 
     @commands.command()
     async def test(self, ctx):
