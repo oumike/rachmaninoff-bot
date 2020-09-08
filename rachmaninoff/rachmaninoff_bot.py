@@ -4,7 +4,7 @@ from pprint import pprint
 
 class RachmaninoffBot(commands.Bot):
     def add_cog(self, cog):
-        pprint("Adding cog " + type(cog).__name__ + "...")
+        pprint("- Adding cog " + type(cog).__name__)
         super().add_cog(cog)
 
     def run(self, token):
