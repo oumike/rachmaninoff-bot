@@ -3,6 +3,7 @@ from pprint import pprint
 from pymongo import MongoClient
 from datetime import datetime # Current date time in local system print(datetime.now())
 import speedtest
+from uptime import boottime
 
 class RachmaninoffInterface(commands.Cog):
     def __init__(self, bot, allowed_users, mongodb_connection=""):
@@ -25,6 +26,14 @@ class RachmaninoffGeneralCog(RachmaninoffInterface):
             return
 
         self.log_action(message.author.name + ': ' + message.content)
+
+    @commands.command()
+    async def boottime(self, ctx):
+        if not self.is_allowed(ctx.author.name):
+            return
+
+        boot_info = boottime()
+        await ctx.send(boot_info.isoformat())
 
     @commands.command()
     async def speedtest(self, ctx):
