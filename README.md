@@ -1,4 +1,4 @@
-# rachmaninoff-bot
+# Rachmaninoff's Bot
 A generic discord bot I'm writing to learn some new stuff and keep status on my local systems.  Feel free to hack/contribute.
 
 ## Before running (or developing)
