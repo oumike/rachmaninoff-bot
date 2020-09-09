@@ -1,10 +1,10 @@
-from rachmaninoff.rachmaninoff_interface import RachmaninoffInterface
+from cogs.interface_cog import InterfaceCog
 from discord.ext import commands
 from pprint import pprint
 from pymongo import MongoClient
 from datetime import datetime
 
-class RachmaninoffTrafficCog(RachmaninoffInterface):
+class TrafficCog(InterfaceCog):
 
     def get_logs_collection(self):
         client = MongoClient(self.mongodb_connection)

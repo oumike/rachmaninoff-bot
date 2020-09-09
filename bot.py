@@ -2,10 +2,10 @@
 import os
 from discord.ext import commands
 from dotenv import load_dotenv
-from rachmaninoff.rachmaninoff_bot import RachmaninoffBot
-from rachmaninoff.rachmaninoff_general_cog import RachmaninoffGeneralCog
-from rachmaninoff.rachmaninoff_traffic_cog import RachmaninoffTrafficCog
-from rachmaninoff.rachmaninoff_weather_cog import RachmaninoffWeatherCog
+from rachmaninoff_bot import RachmaninoffBot
+from cogs.general_cog import GeneralCog
+from cogs.weather_cog import WeatherCog
+from cogs.traffic_cog import TrafficCog
 
 
 load_dotenv()
@@ -17,13 +17,13 @@ OPENWEATHERMAP_APIKEY = os.getenv('OPENWEATHERMAP_APIKEY')
 
 bot = RachmaninoffBot(command_prefix='!')
 
-bot.add_cog(RachmaninoffTrafficCog(bot=bot, 
+bot.add_cog(TrafficCog(bot=bot, 
                                     mongodb_connection=MONGODB_CONNECTION, 
                                     allowed_users=ALLOWED_USERS))
 
-bot.add_cog(RachmaninoffGeneralCog(bot=bot, allowed_users=ALLOWED_USERS))
+bot.add_cog(GeneralCog(bot=bot, allowed_users=ALLOWED_USERS))
 
-bot.add_cog(RachmaninoffWeatherCog(bot=bot, 
+bot.add_cog(WeatherCog(bot=bot, 
                                     allowed_users=ALLOWED_USERS, 
                                     openweathermap_apikey=OPENWEATHERMAP_APIKEY,
                                     mongodb_connection=MONGODB_CONNECTION))

@@ -1,7 +1,7 @@
 from pprint import pprint
 from discord.ext import commands
 
-class RachmaninoffInterface(commands.Cog):
+class InterfaceCog(commands.Cog):
     def __init__(self, bot, allowed_users, mongodb_connection=""):
         super().__init__()
         self.bot = bot

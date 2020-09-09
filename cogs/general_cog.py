@@ -1,10 +1,10 @@
-from rachmaninoff.rachmaninoff_interface import RachmaninoffInterface
+from cogs.interface_cog import InterfaceCog
 from pprint import pprint
 from uptime import boottime
 from speedtest import Speedtest
 from discord.ext import commands
 
-class RachmaninoffGeneralCog(RachmaninoffInterface):
+class GeneralCog(InterfaceCog):
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.name == 'Rachmaninoffs Bot':

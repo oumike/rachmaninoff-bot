@@ -1,10 +1,10 @@
-from rachmaninoff.rachmaninoff_interface import RachmaninoffInterface
+from cogs.interface_cog import InterfaceCog
 from discord.ext import commands
 from pprint import pprint
 import requests, json
 from pymongo import MongoClient
 
-class RachmaninoffWeatherCog(RachmaninoffInterface):
+class WeatherCog(InterfaceCog):
     def __init__(self, bot, allowed_users, openweathermap_apikey, mongodb_connection=''):
         self.openweathermap_apikey = openweathermap_apikey
         self.openweathermap_base_url = "http://api.openweathermap.org/data/2.5/weather?"
