@@ -23,7 +23,10 @@ bot.add_cog(RachmaninoffTrafficCog(bot=bot,
 
 bot.add_cog(RachmaninoffGeneralCog(bot=bot, allowed_users=ALLOWED_USERS))
 
-bot.add_cog(RachmaninoffWeatherCog(bot=bot, allowed_users=ALLOWED_USERS, openweathermap_apikey=OPENWEATHERMAP_APIKEY))
+bot.add_cog(RachmaninoffWeatherCog(bot=bot, 
+                                    allowed_users=ALLOWED_USERS, 
+                                    openweathermap_apikey=OPENWEATHERMAP_APIKEY,
+                                    mongodb_connection=MONGODB_CONNECTION))
 
 bot.run(TOKEN)
 

@@ -2,6 +2,7 @@ from rachmaninoff.rachmaninoff_interface import RachmaninoffInterface
 from discord.ext import commands
 from pprint import pprint
 import requests, json
+from pymongo import MongoClient
 
 class RachmaninoffWeatherCog(RachmaninoffInterface):
     def __init__(self, bot, allowed_users, openweathermap_apikey, mongodb_connection=''):
@@ -12,11 +13,22 @@ class RachmaninoffWeatherCog(RachmaninoffInterface):
     def convert_to_fahrenheit(self, kelvin):
         return (kelvin - 273.15) * 9/5 + 32
 
-    @commands.command()
-    async def weather(self, ctx, zip):
-        if not self.is_allowed(ctx.author.name):
-            return
+    def get_weather_collection(self):
+        client = MongoClient(self.mongodb_connection)
+        return client.rachmaninoff.weather
 
+    @commands.command()
+    async def weather(self, ctx, zip=''):
+        weather_mongo_collection= self.get_weather_collection()
+
+        if zip == '':
+            weather_document = weather_mongo_collection.find_one({'name': 'last_zip', 'user': ctx.author.name})
+            zip = weather_document['value']
+        else:
+            weather_mongo_collection.update_one({'name':'last_zip', 'user':ctx.author.name}, 
+                                                    {'$set': {'value': zip}},
+                                                    upsert=True)
+            
         url = self.openweathermap_base_url + 'appid=' + self.openweathermap_apikey + '&zip=' + zip 
         pprint('Weather url: ' + url)
 

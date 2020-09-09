@@ -8,19 +8,24 @@ class RachmaninoffTrafficCog(RachmaninoffInterface):
 
     def get_logs_collection(self):
         client = MongoClient(self.mongodb_connection)
-        return client.trafficlogs.logs
+        return client.rachmaninoff.trafficlogs
 
     @commands.command()
-    async def log(self, ctx, name: str, day: str, date: str):
+    async def log(self, ctx, name: str, day: str, date: str=''):
         if not self.is_allowed(ctx.author.name):
             return
 
         logs_collection = self.get_logs_collection()
 
+        if date == '':
+            submission_date = datetime.now()
+        else:
+            submission_date = datetime.strptime(date, '%m/%d/%y')
+
         log_json = {
             'name': name,
             'day': day,
-            'date': datetime.strptime(date, '%m/%d/%y'),
+            'date': submission_date,
             'created_at': datetime.now()
         }
 
