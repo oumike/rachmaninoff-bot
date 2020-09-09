@@ -3,6 +3,7 @@ from discord.ext import commands
 from pprint import pprint
 from pymongo import MongoClient
 from datetime import datetime
+import discord
 
 class TrafficCog(InterfaceCog):
 
@@ -41,10 +42,16 @@ class TrafficCog(InterfaceCog):
 
         logs_collection = self.get_logs_collection()
 
+        log_results = ''
         for log in logs_collection.find():
             date = log['date']
-            await ctx.send('name: ' + log['name'] + ', day: ' + log['day'] + ', date: ' + date.__format__('%m/%d/%Y'))
+            log_results = log_results + 'name: ' + log['name'] + ', day: ' + log['day'] + ', date: ' + date.__format__('%m/%d/%Y') + '\n'
         
+        logs_embed = discord.Embed()
+        logs_embed.add_field(name='Traffic Logs', value=log_results)
+
+        await ctx.send(embed=logs_embed)
+
     @commands.command()
     async def deletelogs(self, ctx):
         if not self.is_allowed(ctx.author.name):
