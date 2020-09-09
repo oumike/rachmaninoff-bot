@@ -22,7 +22,6 @@ class RachmaninoffWeatherCog(RachmaninoffInterface):
 
         response = requests.get(url) 
         weather_data = response.json()
-        pprint(weather_data)
 
         city = weather_data['name']
         description = weather_data['weather'][0]['description']
@@ -35,5 +34,3 @@ class RachmaninoffWeatherCog(RachmaninoffInterface):
         answer_string = answer_string.format(city, description, feels_like, wind, humidity)
         
         await ctx.send(answer_string)
-
-# Weather for Farmington Hills, MI, US: 🌥 broken clouds 60°F (15°C) Feels like: 59°F (15°C) Wind: 8mph ↑↗ Humidity: 97%
