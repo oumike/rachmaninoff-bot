@@ -3,6 +3,7 @@ from pprint import pprint
 from uptime import boottime
 from speedtest import Speedtest
 from discord.ext import commands
+import discord
 
 class GeneralCog(InterfaceCog):
     @commands.Cog.listener()
@@ -39,9 +40,17 @@ class GeneralCog(InterfaceCog):
 
         print('finished running speedtest.')
 
-        await ctx.send('Download (megabits): ' + str(round(download_in_mb, 2)))
-        await ctx.send('Upload (megabits): ' + str(round(upload_in_mb, 2)))
-        await ctx.send('Share URL: ' + str(speedtest_results['share']))
+        share = str(speedtest_results['share'])
+
+        speedtest_results = "Download: {0}\nUpload: {1}\nShare URL: {2}"
+        speedtest_results = speedtest_results.format(str(round(download_in_mb, 2)),
+                                                        str(round(upload_in_mb, 2)), 
+                                                        str(share))
+
+        speedtest_embed = discord.Embed()
+        speedtest_embed.add_field(name="Speedtest Results", value=speedtest_results)
+
+        await ctx.send(embed=speedtest_embed)
 
 
     @commands.command()

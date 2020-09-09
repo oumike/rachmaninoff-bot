@@ -1,5 +1,6 @@
 from cogs.interface_cog import InterfaceCog
 from discord.ext import commands
+import discord
 from pprint import pprint
 import requests, json
 from pymongo import MongoClient
@@ -22,15 +23,17 @@ class WeatherCog(InterfaceCog):
         weather_mongo_collection= self.get_weather_collection()
 
         if zip == '':
-            weather_document = weather_mongo_collection.find_one({'name': 'last_zip', 'user': ctx.author.name})
-            zip = weather_document['value']
-        else:
-            weather_mongo_collection.update_one({'name':'last_zip', 'user':ctx.author.name}, 
-                                                    {'$set': {'value': zip}},
-                                                    upsert=True)
+            weather_document = weather_mongo_collection.find_one({'name': 'last_zip_used', 'user': ctx.author.name})
+            if not weather_document:
+                zip = '48336'
+            else:
+                zip = weather_document['value']
+        
+        weather_mongo_collection.update_one({'name':'last_zip_used', 'user':ctx.author.name}, 
+                                                {'$set': {'value': zip}},
+                                                upsert=True)
             
         url = self.openweathermap_base_url + 'appid=' + self.openweathermap_apikey + '&zip=' + zip 
-        pprint('Weather url: ' + url)
 
         response = requests.get(url) 
         weather_data = response.json()
@@ -42,7 +45,12 @@ class WeatherCog(InterfaceCog):
         wind = weather_data['wind']['speed']
         humidity = weather_data['main']['humidity']
 
-        answer_string = 'Weather for {0}: {1}, Feels like: {2}F, Wind: {3}mph, Humidity: {4}%'
+        weather_embed = discord.Embed(title="")
+
+        answer_string = 'Currently {1}\nFeels like {2}F\nWind is {3}mph\nHumidity at {4}%'
         answer_string = answer_string.format(city, description, feels_like, wind, humidity)
         
-        await ctx.send(answer_string)
+        weather_embed.add_field(name=city, value=answer_string)
+        await ctx.send(embed=weather_embed)
+
+        # await ctx.send(answer_string)
