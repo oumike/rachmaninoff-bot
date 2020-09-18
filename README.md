@@ -9,7 +9,7 @@ Make sure you have a pip environment setup and install everything in requirement
 Copy settings and environment file examples
 ```
 cp .env.example .env
-cp rachmaninoff_bot_example.yml rachmaninoff_bot.yml
+cp rachmaninoff_settings.yml.example rachmaninoff_settings.yml
 ```
 
 In each file fill out the required info (tokens for weather, discord, mongodb credentials)

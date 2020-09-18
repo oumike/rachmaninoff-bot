@@ -4,7 +4,7 @@ import yaml
 
 class RachmaninoffBot(commands.Bot):
     def add_cog(self, cog):
-        with open('rachmaninoff_bot.yml') as bot_settings:
+        with open('rachmaninoff_settings.yml') as bot_settings:
             settings = (yaml.load(bot_settings, Loader=yaml.FullLoader))
             
         if settings['debug']:

@@ -130,4 +130,4 @@ dmypy.json
 .pyre/
 
 # Ignore the settings file
-rachmaninoff_bot.yml
+rachmaninoff_settings.yml
