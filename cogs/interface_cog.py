@@ -19,3 +19,4 @@ class InterfaceCog(commands.Cog):
 
     def load_settings(self, settings):
         self.debug = settings['debug']
+        self.default_zipcode = settings['default_zipcode']

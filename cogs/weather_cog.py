@@ -23,21 +23,21 @@ class WeatherCog(InterfaceCog):
         return await self.weather(ctx, zip)
 
     @commands.command()
-    async def weather(self, ctx, zip=''):
+    async def weather(self, ctx, zipcode=''):
         weather_mongo_collection= self.get_weather_collection()
 
-        if zip == '':
+        if zipcode == '':
             weather_document = weather_mongo_collection.find_one({'name': 'last_zip_used', 'user': ctx.author.name})
-            if not weather_document:
-                zip = '48336'
+            if weather_document:
+                zipcode = weather_document['value']
             else:
-                zip = weather_document['value']
+                zipcode = self.default_zipcode
         
         weather_mongo_collection.update_one({'name':'last_zip_used', 'user':ctx.author.name}, 
-                                                {'$set': {'value': zip}},
+                                                {'$set': {'value': zipcode}},
                                                 upsert=True)
             
-        url = self.openweathermap_base_url + 'appid=' + self.openweathermap_apikey + '&zip=' + zip 
+        url = self.openweathermap_base_url + 'appid=' + self.openweathermap_apikey + '&zip=' + str(zipcode) 
 
         response = requests.get(url) 
         weather_data = response.json()
