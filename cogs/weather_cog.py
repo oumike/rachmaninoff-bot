@@ -19,6 +19,10 @@ class WeatherCog(InterfaceCog):
         return client.rachmaninoff.weather
 
     @commands.command()
+    async def w(self, ctx, zip=''):
+        return await self.weather(ctx, zip)
+
+    @commands.command()
     async def weather(self, ctx, zip=''):
         weather_mongo_collection= self.get_weather_collection()
 

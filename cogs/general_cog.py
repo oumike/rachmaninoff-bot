@@ -14,6 +14,10 @@ class GeneralCog(InterfaceCog):
         self.log_action(message.author.name + ': ' + message.content)
 
     @commands.command()
+    async def bt(self, ctx):
+        return await self.boottime(ctx)
+
+    @commands.command()
     async def boottime(self, ctx):
         if not self.is_allowed(ctx.author.name):
             return
@@ -38,7 +42,7 @@ class GeneralCog(InterfaceCog):
         download_in_mb = speedtest_results['download']/(1000*1000)
         upload_in_mb = speedtest_results['upload']/(1000*1000)
 
-        print('finished running speedtest.')
+        print('Finished running speedtest.')
 
         share = str(speedtest_results['share'])
 
