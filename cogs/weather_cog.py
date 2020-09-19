@@ -18,11 +18,7 @@ class WeatherCog(InterfaceCog):
         client = MongoClient(self.mongodb_connection)
         return client.rachmaninoff.weather
 
-    @commands.command()
-    async def w(self, ctx, zip=''):
-        return await self.weather(ctx, zip)
-
-    @commands.command()
+    @commands.command(aliases=['w'], help='Provides weather information with ZIP')
     async def weather(self, ctx, zipcode=''):
         weather_mongo_collection= self.get_weather_collection()
 
@@ -32,29 +28,31 @@ class WeatherCog(InterfaceCog):
                 zipcode = weather_document['value']
             else:
                 zipcode = self.default_zipcode
-        
-        weather_mongo_collection.update_one({'name':'last_zip_used', 'user':ctx.author.name}, 
-                                                {'$set': {'value': zipcode}},
-                                                upsert=True)
-            
+                    
         url = self.openweathermap_base_url + 'appid=' + self.openweathermap_apikey + '&zip=' + str(zipcode) 
 
         response = requests.get(url) 
         weather_data = response.json()
 
-        city = weather_data['name']
-        description = weather_data['weather'][0]['description']
-        feels_like = weather_data['main']['feels_like']
-        feels_like = round(self.convert_to_fahrenheit(feels_like))
-        wind = weather_data['wind']['speed']
-        humidity = weather_data['main']['humidity']
+        if weather_data['cod'] == 200:
 
-        weather_embed = discord.Embed(title="")
+            weather_mongo_collection.update_one({'name':'last_zip_used', 'user':ctx.author.name}, 
+                                        {'$set': {'value': zipcode}},
+                                        upsert=True)
 
-        answer_string = 'Currently {1}\nFeels like {2}F\nWind is {3}mph\nHumidity at {4}%'
-        answer_string = answer_string.format(city, description, feels_like, wind, humidity)
-        
-        weather_embed.add_field(name=city, value=answer_string)
-        await ctx.send(embed=weather_embed)
+            city = weather_data['name']
+            description = weather_data['weather'][0]['description']
+            feels_like = weather_data['main']['feels_like']
+            feels_like = round(self.convert_to_fahrenheit(feels_like))
+            wind = weather_data['wind']['speed']
+            humidity = weather_data['main']['humidity']
 
-        # await ctx.send(answer_string)
+            weather_embed = discord.Embed(title="")
+
+            answer_string = 'Currently {1}\nFeels like {2}F\nWind is {3}mph\nHumidity at {4}%'
+            answer_string = answer_string.format(city, description, feels_like, wind, humidity)
+            
+            weather_embed.add_field(name=city, value=answer_string)
+            await ctx.send(embed=weather_embed)
+        else:
+            await ctx.send("ZIP not found.")

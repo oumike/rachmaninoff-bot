@@ -11,7 +11,7 @@ class TrafficCog(InterfaceCog):
         client = MongoClient(self.mongodb_connection)
         return client.rachmaninoff.trafficlogs
 
-    @commands.command()
+    @commands.command(hidden=True)
     async def log(self, ctx, name: str, day: str, date: str=''):
         if not self.is_allowed(ctx.author.name):
             return
@@ -35,7 +35,7 @@ class TrafficCog(InterfaceCog):
         await ctx.send('Log created.')
         self.log_action('Log created.')
 
-    @commands.command()
+    @commands.command(hidden=True)
     async def getlogs(self, ctx):
         if not self.is_allowed(ctx.author.name):
             return
@@ -52,7 +52,7 @@ class TrafficCog(InterfaceCog):
 
         await ctx.send(embed=logs_embed)
 
-    @commands.command()
+    @commands.command(hidden=True)
     async def deletelogs(self, ctx):
         if not self.is_allowed(ctx.author.name):
             return

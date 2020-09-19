@@ -4,6 +4,8 @@ from uptime import boottime
 from speedtest import Speedtest
 from discord.ext import commands
 import discord
+import requests, json
+import random
 
 class GeneralCog(InterfaceCog):
     @commands.Cog.listener()
@@ -13,11 +15,7 @@ class GeneralCog(InterfaceCog):
 
         self.log_action(message.author.name + ': ' + message.content)
 
-    @commands.command()
-    async def bt(self, ctx):
-        return await self.boottime(ctx)
-
-    @commands.command()
+    @commands.command(name='boottime', aliases=['bt'], help='Shows boottime of server where bot is hosted.')
     async def boottime(self, ctx):
         if not self.is_allowed(ctx.author.name):
             return
@@ -25,7 +23,7 @@ class GeneralCog(InterfaceCog):
         boot_info = boottime()
         await ctx.send(boot_info.isoformat())
 
-    @commands.command()
+    @commands.command(name='speedtest', aliases=['st'], help='Runs speedtest on server where bot is hosted.')
     async def speedtest(self, ctx):
         if not self.is_allowed(ctx.author.name):
             return
@@ -56,7 +54,29 @@ class GeneralCog(InterfaceCog):
 
         await ctx.send(embed=speedtest_embed)
 
+    @commands.command(name='catfact', aliases=['cf'], help='Random cat fact.')
+    async def catfact(self, ctx):
+        url = 'https://cat-fact.herokuapp.com/facts' 
+        response = requests.get(url) 
+        cat_facts = response.json()
 
-    @commands.command()
+        random_cat_fact = random.choice(cat_facts['all'])
+        catfact = random_cat_fact['text'] + "\nBy " + random_cat_fact['user']['name']['first'] + " " + random_cat_fact['user']['name']['last']
+
+        catfact_embed = discord.Embed()
+        catfact_embed.add_field(name="Random Cat Fact", value=catfact)
+        await ctx.send(embed=catfact_embed)
+
+    @commands.command(name='numberfact', aliases=['nf'], help='Random number fact')
+    async def numberfact(self, ctx):
+        url = 'http://numbersapi.com/random/trivia'
+        numberfact = requests.get(url)
+ 
+        numberfact_embed = discord.Embed()
+        numberfact_embed.add_field(name='Number Fact', value=numberfact.text)
+        await ctx.send(embed=numberfact_embed)
+
+    @commands.command(hidden=True)
     async def test(self, ctx):
-        await ctx.send('yes')
+        for command in self.bot.commands:
+            pprint(command.name)
