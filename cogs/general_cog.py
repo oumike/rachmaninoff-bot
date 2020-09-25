@@ -6,6 +6,8 @@ from discord.ext import commands
 import discord
 import requests, json
 import random
+import re
+from lxml import html
 
 class GeneralCog(InterfaceCog):
     @commands.Cog.listener()
@@ -80,3 +82,23 @@ class GeneralCog(InterfaceCog):
     async def test(self, ctx):
         for command in self.bot.commands:
             pprint(command.name)
+
+    @commands.command(name='fml', help='Random FML')
+    async def fml(self, ctx):
+        remove_newline_reg = re.compile('\n')
+        author_reg = re.compile('By (.*?)')
+
+        response = requests.get('https://www.fmylife.com/random')
+
+        html_tree = html.fromstring(response.content)
+        text = html_tree.xpath('.//div[2]/a/text()')[0]
+        
+        author_line = None
+        for line in html_tree.xpath('.//div[1]/text()'):
+            line = line.strip()
+            line = remove_newline_reg.sub(' ', line)
+            if author_reg.search(line):
+                author_line = line
+                break
+
+        await ctx.send(text + '\n' + author_line)
