@@ -131,3 +131,5 @@ dmypy.json
 
 # Ignore the settings file
 rachmaninoff_settings.yml
+
+.vscode
