@@ -18,3 +18,8 @@ Run bot
 ```
 python bot.py
 ```
+
+Stupid command
+```
+git pull && source renv/bin/activate && pip install -r requirements.txt && python bot.py 
+```

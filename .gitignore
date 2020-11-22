@@ -133,3 +133,4 @@ dmypy.json
 rachmaninoff_settings.yml
 
 .vscode
+.idea
