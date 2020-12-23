@@ -102,3 +102,4 @@ class GeneralCog(InterfaceCog):
                 break
 
         await ctx.send(text + '\n' + author_line)
+

@@ -6,6 +6,7 @@ from rachmaninoff_bot import RachmaninoffBot
 from cogs.general_cog import GeneralCog
 from cogs.weather_cog import WeatherCog
 from cogs.traffic_cog import TrafficCog
+from cogs.covid_cog import CovidCog
 
 
 load_dotenv()
@@ -27,6 +28,8 @@ bot.add_cog(WeatherCog(bot=bot,
                                     allowed_users=ALLOWED_USERS, 
                                     openweathermap_apikey=OPENWEATHERMAP_APIKEY,
                                     mongodb_connection=MONGODB_CONNECTION))
+
+bot.add_cog(CovidCog(bot=bot, allowed_users=ALLOWED_USERS))
 
 bot.run(TOKEN)
 
