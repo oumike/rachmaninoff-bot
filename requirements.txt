@@ -12,10 +12,15 @@ lazy-object-proxy==1.5.1
 lxml==4.5.2
 mccabe==0.6.1
 multidict==5.0.0
+multitasking==0.0.9
+numpy==1.19.5
+pandas==1.2.0
 pkg-resources==0.0.0
 pylint==2.6.0
 pymongo==3.11.0
+python-dateutil==2.8.1
 python-dotenv==0.14.0
+pytz==2020.5
 PyYAML==5.3.1
 requests==2.24.0
 six==1.15.0
@@ -27,3 +32,4 @@ uptime==3.0.1
 urllib3==1.25.10
 wrapt==1.12.1
 yarl==1.6.2
+yfinance==0.1.55
