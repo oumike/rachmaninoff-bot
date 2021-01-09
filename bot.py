@@ -7,7 +7,7 @@ from cogs.general_cog import GeneralCog
 from cogs.weather_cog import WeatherCog
 from cogs.traffic_cog import TrafficCog
 from cogs.covid_cog import CovidCog
-
+from cogs.stock_cog import StockCog
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -30,6 +30,8 @@ bot.add_cog(WeatherCog(bot=bot,
                                     mongodb_connection=MONGODB_CONNECTION))
 
 bot.add_cog(CovidCog(bot=bot, allowed_users=ALLOWED_USERS))
+
+bot.add_cog(StockCog(bot=bot, allowed_users=ALLOWED_USERS))
 
 bot.run(TOKEN)
 
